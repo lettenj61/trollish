@@ -39,7 +39,7 @@ case class Tone(expr: String, taste: Tastes.Taste, appeared: Int, started: Int, 
   def canClose: Boolean = closed > 0
 }
 object Tone {
-  val vowels = "aeiouy".toSet
+  val vowels = Set("a", "e", "i", "o", "u")
   val unknown = Tone("_unknown_", Tastes.Unknown, 0, 0, 0)
 
   /** Simplified regex parsing. */
@@ -66,7 +66,10 @@ class Mapper(val replacements: Map[String, Rep], private var singleVowels: Map[S
   def newSingleVowels(): Unit = {
     singleVowels = newSingleVowelMap()
   }
-  def get(expr: String): Rep = replacements getOrElse(expr.trim, new Rep(expr))
+  def get(expr: String): Rep = {
+    if (Tone.vowels(expr)) new Rep(singleVowels(expr))
+    else replacements getOrElse(expr.trim, new Rep(expr))
+  }
   def translate(word: String): String = {
     val tones = Tone.parse(word)
     if (tones.isEmpty) ""
