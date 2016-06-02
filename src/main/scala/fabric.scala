@@ -79,6 +79,8 @@ class Fabric(val tones: Seq[Tone], val mapper: Mapper) {
   }
 
   def nextPhrase(words: Int = nextInt(5) + 2) = nextTranslation(words)._2
+
+  def updateMapper(mapper: Mapper): Fabric = new Fabric(this.tones, mapper)
 }
 
 object Fabric {
