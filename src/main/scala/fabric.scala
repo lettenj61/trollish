@@ -67,7 +67,7 @@ class Fabric(val tones: Seq[Tone], val mapper: Mapper) {
     buf.toString
   }
 
-  def nextTranslation(words: Int = 4) = {
+  def nextTranslation(words: Int = nextInt(5) + 2) = {
     val buf = new ArrayBuffer[String]
     var count = 0
     while (count < words) {
@@ -78,7 +78,7 @@ class Fabric(val tones: Seq[Tone], val mapper: Mapper) {
     (buf.mkString(" "), translated.mkString(" "))
   }
 
-  def nextPhrase(words: Int = 4) = nextTranslation(words)._2
+  def nextPhrase(words: Int = nextInt(5) + 2) = nextTranslation(words)._2
 }
 
 object Fabric {
