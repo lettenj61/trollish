@@ -82,6 +82,8 @@ class Mapper(val replacements: Map[String, Rep], private var singleVowels: Map[S
     sentence.split("\\s").map(translate(_)).mkString(" ")
   }
 
+  def showTranslation(word: String) = (word, translate(word))
+
   def updated(expr: String, rep: Rep): Mapper =
     new Mapper(replacements.updated(expr, rep), singleVowels)
   def updated(expr: String, onHead: String, onBody: String, onTail: String): Mapper = {
