@@ -82,7 +82,7 @@ class Mapper(val replacements: Map[String, Rep], private var singleVowels: Map[S
   }
 
   def translateSentence(sentence: String): String = {
-    sentence.split("\\s").map(translate(_)).mkString(" ")
+    sentence.split("\\s").map(translate).mkString(" ")
   }
 
   def showTranslation(word: String) = (word, translate(word))
@@ -137,7 +137,7 @@ object Mapper {
           }
         }
 
-        go(tone, buf.head, average)
+        go(tone, buf.head, threshold)
       }
     }
 

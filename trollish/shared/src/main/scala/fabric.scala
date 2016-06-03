@@ -86,8 +86,9 @@ class Fabric(val tones: Seq[Tone], val mapper: Mapper) {
 object Fabric {
   import Tones._
 
-  def withDeduplication(): Fabric = {
-    val mapper = Mapper(defaultValues, 10, true, average)
+  def deduplicated(tones: Seq[Tone] = defaultValues,
+                   retry: Int = 10, threshold: Int = average): Fabric = {
+    val mapper = Mapper(tones, retry, true, threshold)
     new Fabric(defaultValues, mapper)
   }
 }
