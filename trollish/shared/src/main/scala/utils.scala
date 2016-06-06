@@ -1,9 +1,9 @@
 package trollish
 
-import scala.util.{ Random => R }
+import scala.util.Random
 
 object Utils {
-  import R.{ nextInt, nextBoolean }
+  import Random.{ nextInt, nextBoolean }
 
   /** Randomly select an element from given sequence. */
   def nextElem[A](seq: Seq[A]): A = seq.apply(nextInt(seq.size)) 

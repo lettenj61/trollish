@@ -3,7 +3,8 @@ package trollish
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random.{ nextInt, nextBoolean }
 
-class Fabric(val tones: Seq[Tone], val mapper: Mapper) {
+case class Fabric(tones: Seq[Tone], mapper: Mapper) {
+  import Utils.nextElem
 
   val vowel = (_: Tone).isVowel
   val consonant = !(_: Tone).isVowel
@@ -27,7 +28,6 @@ class Fabric(val tones: Seq[Tone], val mapper: Mapper) {
   def nextPopularVowel: Tone = nextElem(aboveAverage filter vowel)
   def nextPopularConso: Tone = nextElem(aboveAverage filter consonant)
 
-  private def nextElem[A](list: Seq[A]): A = list.apply(nextInt(list.size))
   def kindOf(tone: Tone)(kinds: Seq[Tone]): Seq[Tone] = {
     kinds.filter(t => t.canReplace(tone))
   }
@@ -80,7 +80,12 @@ class Fabric(val tones: Seq[Tone], val mapper: Mapper) {
 
   def nextPhrase(words: Int = nextInt(5) + 2) = nextTranslation(words)._2
 
-  def updateMapper(mapper: Mapper): Fabric = new Fabric(this.tones, mapper)
+  def updateMapper(mapper: Mapper): Fabric = copy(mapper = mapper)
+
+  override def toString = {
+    val welcome = "welcome to your language"
+    (welcome, mapper.translateSentence(welcome)).toString
+  }
 }
 
 object Fabric {
@@ -89,6 +94,6 @@ object Fabric {
   def deduplicated(tones: Seq[Tone] = defaultValues,
                    retry: Int = 10, threshold: Int = average): Fabric = {
     val mapper = Mapper(tones, retry, true, threshold)
-    new Fabric(defaultValues, mapper)
+    Fabric(tones, mapper)
   }
 }

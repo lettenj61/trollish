@@ -58,6 +58,15 @@ object Tone {
 case class Rep(onHead: String, onBody: String, onTail: String) {
   def this(expr: String) = this(expr, expr, expr)
 }
+object Rep {
+  lazy val constant = Map(
+    "a" -> new Rep("a"),
+    "e" -> new Rep("e"),
+    "i" -> new Rep("i"),
+    "o" -> new Rep("o"),
+    "u" -> new Rep("u")
+  )
+}
 
 /** Mapping a tone with replacements. */
 class Mapper(val replacements: Map[String, Rep], private var singleVowels: Map[String, String]) {
@@ -67,7 +76,7 @@ class Mapper(val replacements: Map[String, Rep], private var singleVowels: Map[S
     singleVowels = newSingleVowelMap()
   }
   def get(expr: String): Rep = {
-    if (Tone.vowels(expr)) new Rep(singleVowels(expr))
+    if (Tone.vowels(expr)) Rep.constant(singleVowels(expr))
     else replacements getOrElse(expr.trim, new Rep(expr))
   }
   def translate(word: String): String = {
