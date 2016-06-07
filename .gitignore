@@ -1,8 +1,8 @@
 *.class
 *.log
 
-# switch jsEnvs for each deployment stages.
-local.sbt
+# personal notes
+_note/
 
 # sbt specific
 .cache

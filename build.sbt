@@ -22,10 +22,15 @@ lazy val trollish = crossProject.settings(
   scalaVersion := "2.11.8",
 
   libraryDependencies ++= Seq(
+    "com.lihaoyi" %%% "upickle" % "0.4.1",
     "com.lihaoyi" %%% "utest" % "0.4.3" % "test"
   ),
   testFrameworks += new TestFramework("utest.runner.Framework"))
-.jvmSettings()
+.jvmSettings(
+  libraryDependencies ++= Seq(
+    "com.lihaoyi" %% "ammonite-ops" % "0.5.8"
+  )
+)
 .jsSettings(
   scalaJSUseRhino in Global := false,
   libraryDependencies ++= Seq(

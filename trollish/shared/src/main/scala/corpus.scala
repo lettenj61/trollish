@@ -6,7 +6,7 @@ object Tones {
   /** Average appearance in default corpus. */
   val average = 150
 
-  lazy val defaultValues = default.values.toList
+  lazy val defaultValues = default.values.toSeq
   lazy val vowels = defaultValues.filter(_.isVowel)
   lazy val consonants = defaultValues.filterNot(_.isVowel)
   lazy val corpusSize = defaultValues.size

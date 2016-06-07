@@ -76,25 +76,12 @@ class Mapper(val replacements: Map[String, Rep], private var singleVowels: Map[S
     singleVowels = newSingleVowelMap()
   }
   def get(expr: String): Rep = {
-    if (Tone.vowels(expr)) Rep.constant(singleVowels(expr))
-    else replacements getOrElse(expr.trim, new Rep(expr))
-  }
-  def translate(word: String): String = {
-    val tones = Tone.parse(word)
-    if (tones.isEmpty) ""
-    else if (tones.size == 1) get(tones.head).onHead
-    else if (tones.size == 2) get(tones.head).onHead + get(tones.last).onTail
-    else {
-      val body = tones.tail.dropRight(1).map { t => get(t).onBody }
-      get(tones.head).onHead + body.mkString + get(tones.last).onTail
-    }
+    val t = expr.trim
+    if (Tone.vowels(t)) Rep.constant(singleVowels(t))
+    else replacements getOrElse(t, new Rep(t))
   }
 
-  def translateSentence(sentence: String): String = {
-    sentence.split("\\s").map(translate).mkString(" ")
-  }
-
-  def showTranslation(word: String) = (word, translate(word))
+  def singleVowelsRef = singleVowels.toMap
 
   def updated(expr: String, rep: Rep): Mapper =
     new Mapper(replacements.updated(expr, rep), singleVowels)
@@ -103,9 +90,11 @@ class Mapper(val replacements: Map[String, Rep], private var singleVowels: Map[S
     updated(expr, rep)
   }
   def updated(expr: String, anywhere: String): Mapper = updated(expr, new Rep(anywhere))
+  def updated(reps: (String, Rep)*): Mapper = new Mapper(replacements ++ reps, singleVowels)
 }
 object Mapper {
   import Random.nextInt
+  import Utils.nextElem
 
   /** Create translations for special vowels which represent themselves as a single character. */
   def newSingleVowelMap(): Map[String, String] = {
@@ -132,18 +121,19 @@ object Mapper {
       }
     }
 
-    def candidate(tone: Tone, index: Seq[Tone], average: Int): Tone = {
-      val candidates = index.filter(t => tone.canReplace(t) && t != tone)
+    def candidate(tone: Tone, source: Seq[Tone]): Tone = {
+      import Tone._
 
-      if (!deduplicate) candidates(nextInt(candidates.size))
+      val candidates = source.filter(t => tone.canReplace(t) && t != tone)
+
+      if (candidates.isEmpty) tone
+      else if (!deduplicate) nextElem(candidates)
       else {
         val buf = candidates.toBuffer
         @tailrec def go(tone: Tone, next: Tone, thres: Int): Tone = {
-          if (resembles(tone, next, Some(thres))) next
-          else {
-            buf -= next
-            go(tone, buf(nextInt(buf.size)), thres + thres)
-          }
+          buf -= next
+          if (buf.isEmpty || resembles(tone, next, Some(thres))) next
+          else go(tone, buf(nextInt(buf.size)), thres + thres)
         }
 
         go(tone, buf.head, threshold)
@@ -160,11 +150,11 @@ object Mapper {
           tried = retry
           singles getOrElse(expr, expr)
         } else {
-          candidate(t, tones, threshold).expr
+          candidate(t, tones).expr
         }
       }
       while (spent.contains(alt) && tried < retry) {
-        alt = candidate(t, tones, threshold).expr
+        alt = candidate(t, tones).expr
         tried += 1
       }
       spent += alt
