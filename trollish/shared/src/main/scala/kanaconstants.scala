@@ -3,8 +3,8 @@ package trollish
 object KanaConstants {
 
   /* utility functions. */
-  def bar(s: String) = s + "-"
-  def hop(s: String) = "+" + s
+  def bar(s: String) = s + "ー"
+  def hop(s: String) = "ッ" + s
 
   lazy val default = Seq(
     /* redundant tones. */
@@ -38,9 +38,14 @@ object KanaConstants {
     "x"     -> "ks",
 
     /* closings. */
-    "cch$"  -> "ch",
     "ch$"   -> "フ",
     "gh$"   -> "フ",
+    "atz$"  -> "aッツ",
+    "itz$"  -> "iッツ",
+    "otz$"  -> "oッツ",
+    "tz$"   -> "ツ",
+    "our$"  -> "aワー",
+    "ur$"   -> "uーア",
 
     /* normalizes */
     "gha"   -> "ガ",
@@ -61,7 +66,7 @@ object KanaConstants {
     "re"    -> "レ",
     "ro"    -> "ロ",
     "ir"    -> "ia",
-    "ur"    -> "ua",
+    "ur"    -> bar("a"),
     "er"    -> "ea",
     "ar"    -> "aル",
     "qu"    -> "kw",
@@ -70,7 +75,17 @@ object KanaConstants {
     "tyu"   -> "チュ",
     "tye"   -> "チェ",
     "tyo"   -> "チョ",
-    "sha"   -> "シャ",
+    "tza"   -> "ツァ",
+    "tzi"   -> "ツィ",
+    "tzu"   -> "ツー",
+    "tze"   -> "ツェ",
+    "tzo"   -> "ツォ",
+    "scha"  -> "シャ",
+    "schi"  -> "スキ",
+    "schu"  -> "シュ",
+    "sche"  -> "シェ",
+    "scho"  -> "スコ",
+    "sch"   -> "シュ",
     "shi"   -> "シ",
     "shu"   -> "シュ",
     "she"   -> "シェ",
@@ -108,6 +123,12 @@ object KanaConstants {
     "hyu"   -> "ヒュ",
     "hye"   -> "ヒェ",
     "hyo"   -> "ヒョ",
+    "wha"   -> "ワー",
+    "whe"   -> "ウェ",
+    "^whi"  -> "ホワi",
+    "whi"   -> "ウィ",
+    "who"   -> "ホー",
+    "whu"   -> "ウー",
     "ba"    -> "バ",
     "bi"    -> "ビ",
     "bu"    -> "ブ",
@@ -116,6 +137,7 @@ object KanaConstants {
     "ca"    -> "カ",
     "ci"    -> "キ",
     "cu"    -> "ク",
+    "^ce"   -> "セ",
     "ce"    -> "ケ",
     "co"    -> "コ",
     "da"    -> "ダ",
@@ -125,7 +147,8 @@ object KanaConstants {
     "do"    -> "ド",
     "fa"    -> "ファ",
     "fi"    -> "フィ",
-    "fu"    -> "ファ",
+    "^fu"   -> "ファ",
+    "fu"    -> "フ",
     "fe"    -> "フェ",
     "fo"    -> "フォ",
     "pha"   -> "ファ",
@@ -177,6 +200,7 @@ object KanaConstants {
     "qu"    -> "ク",
     "sa"    -> "サ",
     "si"    -> "シ",
+    "sus"   -> "サs",
     "su"    -> "ス",
     "se"    -> "セ",
     "so"    -> "ソ",
@@ -203,6 +227,8 @@ object KanaConstants {
     "zu"    -> "ズ",
     "ze"    -> "ゼ",
     "zo"    -> "ゾ",
+    "ck"    -> hop("k"),
+    "rl"    -> "ル",
     "b"     -> "ブ",
     "c"     -> "ク",
     "d"     -> "ド",
