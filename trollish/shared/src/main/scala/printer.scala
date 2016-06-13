@@ -1,13 +1,11 @@
 package trollish
 
-import ammonite.ops._
+trait KanaPrinter {
 
-trait Printer {
+  type Entry = (String, String)
+  type Table = Seq[Entry]
 
-  var kanaTable: KanaLayer.Table = KanaConstants.default
-  def loadConverter(src: Path): Unit = {
-    kanaTable = KanaLayer.fromFile(src)
-  }
+  var kanaTable: Table = KanaConstants.default
 
   def translate(s: String)(implicit fab: Fabric) = println(fab.showSentence(s))
   def display(s: String)(implicit fab: Fabric) = println(fab.display(s))
@@ -34,6 +32,11 @@ trait Printer {
 
   def randomKana(implicit fab: Fabric) = {
     val (eng, fiction) = random
-    Seq(eng, fiction, kanarizeAll(fiction)).mkString("\n")
+    (eng, fiction, kanarizeAll(fiction))
+  }
+
+  def printKana(implicit fab: Fabric) = {
+    val (eng, fiction, kana) = randomKana(fab)
+    println(eng); println(fiction); println(kana)
   }
 }

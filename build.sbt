@@ -29,7 +29,8 @@ lazy val trollish = crossProject.settings(
 .jvmSettings(
   libraryDependencies ++= Seq(
     "com.lihaoyi" %% "ammonite-ops" % "0.5.8"
-  )
+  ),
+  initialCommands in console := """import trollish._"""
 )
 .jsSettings(
   scalaJSUseRhino in Global := false,
@@ -41,3 +42,17 @@ lazy val trollish = crossProject.settings(
 
 lazy val trollishJVM = trollish.jvm
 lazy val trollishJS = trollish.js
+
+lazy val demo = project.dependsOn(trollishJS)
+.enablePlugins(ScalaJSPlugin)
+.settings(
+  organization := "com.github.lettenj61",
+  name := "trollish-demo",
+  version := "0.0.1-SNAPSHOT",
+  scalaVersion := "2.11.8",
+  scalaJSUseRhino in Global := false,
+  libraryDependencies ++= Seq(
+    "org.scala-js" %%% "scalajs-dom" % "0.8.2",
+    "com.lihaoyi" %%% "scalatags" % "0.5.5"
+  )
+)
