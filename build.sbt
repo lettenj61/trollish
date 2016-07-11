@@ -11,7 +11,7 @@ lazy val shipyard = project.settings(
     "org.scalikejdbc" %% "scalikejdbc-config" % "2.3.5",
     "com.h2database" % "h2" % "1.4.191",
     "ch.qos.logback" % "logback-classic" % "1.1.3",
-    "com.lihaoyi" %% "ammonite-ops" % "0.5.8"
+    "com.lihaoyi" %% "ammonite-ops" % "0.6.2"
   )
 )
 
@@ -28,7 +28,7 @@ lazy val trollish = crossProject.settings(
   testFrameworks += new TestFramework("utest.runner.Framework"))
 .jvmSettings(
   libraryDependencies ++= Seq(
-    "com.lihaoyi" %% "ammonite-ops" % "0.5.8"
+    "com.lihaoyi" %% "ammonite-ops" % "0.6.2"
   ),
   initialCommands in console := """import trollish._"""
 )
@@ -53,6 +53,8 @@ lazy val demo = project.dependsOn(trollishJS)
   scalaJSUseRhino in Global := false,
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.8.2",
-    "com.lihaoyi" %%% "scalatags" % "0.5.5"
-  )
+    "com.lihaoyi" %%% "scalatags" % "0.5.5",
+    "org.querki" %%% "jquery-facade" % "1.0-RC6"
+  ),
+  jsDependencies += "org.webjars" % "jquery" % "2.2.1" / "jquery.js" minified "jquery.min.js"
 )

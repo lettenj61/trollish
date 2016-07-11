@@ -1,0 +1,7 @@
+.pure-g [class *= "pure-u"] {
+  font-family: "Hiragino Kaku Gothic Pro", "Meiryo", monospace, sans-serif;
+}
+
+code, kbd, pre, samp {
+  font-family: "consolas", monospace;
+}
