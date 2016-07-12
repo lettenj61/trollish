@@ -8,6 +8,7 @@ object Tones {
 
   lazy val defaultValues = default.values.toSeq
   lazy val vowels = defaultValues.filter(_.isVowel)
+  lazy val singleVowels = defaultValues.filter(t => t.isVowel && t.length == 1 && t.expr != "y")
   lazy val consonants = defaultValues.filterNot(_.isVowel)
   lazy val corpusSize = defaultValues.size
 

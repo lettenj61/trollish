@@ -32,6 +32,15 @@ case class Tone(expr: String, taste: Tastes.Taste, appeared: Int, started: Int, 
     this.canClose == that.canClose
   }
 
+  /** Tests if this tone can appear at same position with `that`
+    * under given frequency.
+    */
+  def mayReplaceAt(that: Tone, freq: Int): Boolean = {
+    this.canReplace(that) &&
+    (this.started - that.started).abs <= freq &&
+    (this.closed - that.closed).abs <= freq
+  }
+
   def isAlone: Boolean = appeared == 1
   def length: Int = expr.length
 
@@ -125,40 +134,50 @@ object Mapper {
       import Tone._
 
       val candidates = source.filter(t => tone.canReplace(t) && t != tone)
+      //println(s"Candidates to replace ${tone.expr} => ${candidates.size} items")
 
       if (candidates.isEmpty) tone
       else if (!deduplicate) nextElem(candidates)
       else {
-        val buf = candidates.toBuffer
+        // attempt to shuffle elements, don't know how effective.
+        val buf = source.filter { t =>
+          tone.mayReplaceAt(t, threshold) && t != tone
+        }.toSet.toBuffer
         @tailrec def go(tone: Tone, next: Tone, thres: Int): Tone = {
           buf -= next
           if (buf.isEmpty || resembles(tone, next, Some(thres))) next
           else go(tone, buf(nextInt(buf.size)), thres + thres)
         }
 
-        go(tone, buf.head, threshold)
+        if (buf.isEmpty) tone
+        else go(tone, buf.head, threshold)
       }
     }
 
     val spent = new ArrayBuffer[String]
     val singles = newSingleVowelMap()
     val mapping = tones.map { t =>
+      val allowed = tones.toBuffer
       val expr = t.expr
       var tried = 0
       var alt = {
         if (t.isVowel && t.length == 1 && expr != "y") {
           tried = retry
-          singles getOrElse(expr, expr)
+          val k = singles getOrElse(expr, expr)
+          Tones.default(k)
         } else {
-          candidate(t, tones).expr
+          candidate(t, allowed)
         }
       }
-      while (spent.contains(alt) && tried < retry) {
-        alt = candidate(t, tones).expr
+      while (spent.contains(alt.expr) && tried < retry) {
+        allowed -= alt
+        alt = candidate(t, allowed)
         tried += 1
       }
-      spent += alt
-      (expr, new Rep(alt))
+      if (spent.contains(alt.expr)) println(s"duplicated ... ${(t.expr, alt.expr)}")
+      spent += alt.expr
+      //println(s"Mapped ${t.expr} to ${alt.expr}, current buffer = ${spent.size}")
+      (expr, new Rep(alt.expr))
     }.toMap
     new Mapper(mapping, singles)
   }
