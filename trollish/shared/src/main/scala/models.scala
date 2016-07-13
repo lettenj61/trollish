@@ -66,6 +66,8 @@ object Tone {
 /** A tone's replacement. */
 case class Rep(onHead: String, onBody: String, onTail: String) {
   def this(expr: String) = this(expr, expr, expr)
+
+  override def toString = s"($onHead,$onBody,$onTail)"
 }
 object Rep {
   lazy val constant = Map(

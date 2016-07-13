@@ -72,9 +72,19 @@ case class Fabric(tones: Seq[Tone], mapper: Mapper) {
 
   def newSingleVowels = mapper.newSingleVowels()
 
+  def shuffle(retry: Int = 1, deduplicate: Boolean = true,
+              thres: Int = average, preserveReps: Boolean = false): Fabric = {
+    val newMapper = Mapper(tones, retry, deduplicate, thres)
+    if (preserveReps) withMapper(newMapper.updated(reps.toList: _*))
+    else withMapper(newMapper)
+  }
+
   def withMapper(mapper: Mapper): Fabric = copy(mapper = mapper)
   def mergeReps(): Fabric = withMapper(mapper.updated(reps.toList: _*))
 
+  def rep(expr: String, head: String, body: String, tail: String) = {
+    reps += (expr -> new Rep(head, body, tail))
+  }
   def rep(expr: String, alt: String): Unit = reps += (expr -> new Rep(alt))
   def rep(pair: (String, String)): Unit = rep(pair._1, pair._2)
 

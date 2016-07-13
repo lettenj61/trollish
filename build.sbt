@@ -1,20 +1,6 @@
 enablePlugins(ScalaJSPlugin)
 scalaVersion := "2.11.8"
 
-lazy val shipyard = project.settings(
-  organization := "com.github.lettenj61",
-  name := "trollish-shipyard",
-  version := "NA",
-  scalaVersion := "2.11.8",
-  libraryDependencies ++= Seq(
-    "org.scalikejdbc" %% "scalikejdbc" % "2.3.5",
-    "org.scalikejdbc" %% "scalikejdbc-config" % "2.3.5",
-    "com.h2database" % "h2" % "1.4.191",
-    "ch.qos.logback" % "logback-classic" % "1.1.3",
-    "com.lihaoyi" %% "ammonite-ops" % "0.6.2"
-  )
-)
-
 lazy val trollish = crossProject.settings(
   organization := "com.github.lettenj61",
   name := "trollish",
@@ -42,6 +28,20 @@ lazy val trollish = crossProject.settings(
 
 lazy val trollishJVM = trollish.jvm
 lazy val trollishJS = trollish.js
+
+lazy val shipyard = project.dependsOn(trollishJVM).settings(
+  organization := "com.github.lettenj61",
+  name := "trollish-shipyard",
+  version := "NA",
+  scalaVersion := "2.11.8",
+  libraryDependencies ++= Seq(
+    "org.scalikejdbc" %% "scalikejdbc" % "2.3.5",
+    "org.scalikejdbc" %% "scalikejdbc-config" % "2.3.5",
+    "com.h2database" % "h2" % "1.4.191",
+    "ch.qos.logback" % "logback-classic" % "1.1.3",
+    "com.lihaoyi" %% "ammonite-ops" % "0.6.2"
+  )
+)
 
 lazy val demo = project.dependsOn(trollishJS)
 .enablePlugins(ScalaJSPlugin)
